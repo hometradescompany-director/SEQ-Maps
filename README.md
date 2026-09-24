@@ -39,3 +39,7 @@ Bootstrap stage. Architecture and contracts come before UI.
 Software in this repository is licensed under the Apache License 2.0 unless a file states otherwise.
 
 External datasets, APIs and source material retain their own licences and terms. See `THIRD_PARTY_DATA.md`.
+
+## Engineering doctrine
+
+For the shared **POS Systems / “Welcome to the Shit Show”** engineering posture and its application in this repository, see [README.POS.md](README.POS.md).
