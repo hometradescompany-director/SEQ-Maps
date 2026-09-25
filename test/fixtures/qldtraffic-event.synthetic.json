@@ -1,0 +1,54 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "GeometryCollection",
+    "geometries": [
+      {
+        "type": "Point",
+        "coordinates": [153.0251, -27.4698]
+      }
+    ]
+  },
+  "properties": {
+    "id": 900000001,
+    "status": "Published",
+    "published": "2026-09-24T08:10:00+10:00",
+    "source": {
+      "source_name": "Synthetic fixture",
+      "source_id": "fixture",
+      "account": "test",
+      "provided_by": "SEQ Maps test suite",
+      "provided_by_url": null
+    },
+    "url": "https://example.invalid/qldtraffic/events/900000001",
+    "event_type": "Congestion",
+    "event_subtype": "Heavy traffic",
+    "event_due_to": null,
+    "impact": {
+      "direction": "Inbound",
+      "towards": "Brisbane",
+      "impact_type": "Delays",
+      "impact_subtype": null,
+      "delay": "Delays expected"
+    },
+    "duration": {
+      "start": "2026-09-24T08:00:00+10:00",
+      "end": "2026-09-24T09:30:00+10:00",
+      "active_days": null,
+      "recurrences": null
+    },
+    "event_priority": "Medium",
+    "description": "Synthetic congestion fixture for adapter testing.",
+    "advice": "Synthetic fixture only.",
+    "information": "Not live QLDTraffic data.",
+    "road_summary": {
+      "road_name": "Example Road",
+      "locality": "Brisbane City",
+      "postcode": "4000",
+      "local_government_area": "Brisbane",
+      "district": "Metropolitan"
+    },
+    "last_updated": "2026-09-24T08:12:00+10:00",
+    "next_inspection": null
+  }
+}
