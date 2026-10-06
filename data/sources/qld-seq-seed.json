@@ -1,0 +1,81 @@
+[
+  {
+    "id": "qld:mapsonline-api",
+    "name": "MapsOnline API",
+    "publisher": "Queensland Government",
+    "kind": "government",
+    "authority": "authoritative",
+    "jurisdiction": "Queensland",
+    "canonicalUrl": "https://www.data.qld.gov.au/dataset/mapsonline-api",
+    "protocol": "rest",
+    "licence": "CC BY 4.0",
+    "standing": "accepted",
+    "declaredCapabilities": ["spatial-reporting", "feature-type-discovery", "lot-plan-query", "coordinate-query"],
+    "notes": "Public API; portal currently reports Used in data driven application = NO."
+  },
+  {
+    "id": "qld:lga-boundaries",
+    "name": "Local government area boundaries - Queensland",
+    "publisher": "Queensland Government",
+    "kind": "government",
+    "authority": "authoritative",
+    "jurisdiction": "Queensland",
+    "canonicalUrl": "https://www.data.qld.gov.au/dataset/local-government-area-boundaries-queensland",
+    "protocol": "arcgis-rest",
+    "licence": "CC BY 4.0",
+    "standing": "accepted",
+    "declaredCapabilities": ["lga-boundaries"]
+  },
+  {
+    "id": "qld:locality-boundaries",
+    "name": "Locality boundaries - Queensland",
+    "publisher": "Queensland Government",
+    "kind": "government",
+    "authority": "authoritative",
+    "jurisdiction": "Queensland",
+    "canonicalUrl": "https://www.data.qld.gov.au/dataset/locality-boundaries-queensland",
+    "protocol": "arcgis-rest",
+    "licence": "CC BY 4.0",
+    "standing": "accepted",
+    "declaredCapabilities": ["official-locality-boundaries", "addressing-context"]
+  },
+  {
+    "id": "qld:buildings-series",
+    "name": "Buildings - Queensland series",
+    "publisher": "Queensland Government",
+    "kind": "government",
+    "authority": "authoritative",
+    "jurisdiction": "Queensland",
+    "canonicalUrl": "https://www.data.qld.gov.au/dataset/buildings-queensland-series",
+    "protocol": "arcgis-rest",
+    "licence": "CC BY 4.0",
+    "standing": "accepted",
+    "declaredCapabilities": ["building-points", "building-outlines"]
+  },
+  {
+    "id": "qld:transport-features-series",
+    "name": "Transport features - Queensland series",
+    "publisher": "Queensland Government",
+    "kind": "government",
+    "authority": "authoritative",
+    "jurisdiction": "Queensland",
+    "canonicalUrl": "https://www.data.qld.gov.au/dataset/transport-features-queensland-series",
+    "protocol": "arcgis-rest",
+    "licence": "CC BY 4.0",
+    "standing": "accepted",
+    "declaredCapabilities": ["roads", "bridges", "rail", "stations", "tunnels", "airports"]
+  },
+  {
+    "id": "qld:cadastral-series",
+    "name": "Cadastral data - Queensland series",
+    "publisher": "Queensland Government",
+    "kind": "government",
+    "authority": "authoritative",
+    "jurisdiction": "Queensland",
+    "canonicalUrl": "https://www.data.qld.gov.au/dataset/cadastral-data-queensland-series",
+    "protocol": "arcgis-rest",
+    "licence": "CC BY 4.0",
+    "standing": "accepted",
+    "declaredCapabilities": ["land-parcels", "lot-plan-context", "cadastral-mapping"]
+  }
+]
