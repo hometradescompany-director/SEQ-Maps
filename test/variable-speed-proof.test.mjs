@@ -13,6 +13,19 @@ const fixture = JSON.parse(
   )
 );
 
+test("comparison preserves absent travel and merge metrics rather than coercing null to zero", () => {
+  const empty = summarizeCorridorScenario([{ durationMinutes: 15, postedSpeedKph: 80,
+    flowVph: 0, queueVehicles: 0, meanTravelTimeMinutes: 0,
+    mergeAttempts: 0, mergeSuccessRatio: 0 }]);
+  const observed = summarizeCorridorScenario(fixture.scenarios.posted_80);
+  for (const [reference, candidate] of [[empty, observed], [observed, empty], [empty, empty]]) {
+    const comparison = compareCorridorScenarios(reference, candidate);
+    assert.equal(comparison.travelTimeDeltaMinutes, null);
+    assert.equal(comparison.mergeSuccessDelta, null);
+    assert.equal(comparison.causalConclusion, "not-established");
+  }
+});
+
 test("synthetic fixture remains explicitly non-live", () => {
   assert.equal(fixture.standing, "synthetic-illustrative-only");
   assert.match(fixture.corridor, /not live Queensland traffic data/i);

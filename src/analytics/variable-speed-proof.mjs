@@ -104,6 +104,10 @@ export function compareCorridorScenarios(reference, candidate) {
   if (!reference || !candidate) {
     throw new TypeError("reference and candidate summaries are required");
   }
+  const optionalDelta = (field) =>
+    reference[field] === null || candidate[field] === null
+      ? null
+      : candidate[field] - reference[field];
 
   return Object.freeze({
     throughputDeltaVehicles:
@@ -113,9 +117,9 @@ export function compareCorridorScenarios(reference, candidate) {
     meanQueueDeltaVehicles:
       candidate.meanQueueVehicles - reference.meanQueueVehicles,
     travelTimeDeltaMinutes:
-      candidate.weightedMeanTravelTimeMinutes - reference.weightedMeanTravelTimeMinutes,
+      optionalDelta("weightedMeanTravelTimeMinutes"),
     mergeSuccessDelta:
-      candidate.mergeSuccessRatio - reference.mergeSuccessRatio,
+      optionalDelta("mergeSuccessRatio"),
     causalConclusion: "not-established",
   });
 }
