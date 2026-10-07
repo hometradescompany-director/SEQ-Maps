@@ -9,6 +9,7 @@ const record = {
   id: "professional:fixture:1",
   identity: { name: "Example professional" },
   profession: "surveyor",
+  roles: ["surveyor", "land-surveyor"],
   jurisdiction: "Queensland",
   registrationRefs: [{ authorityRef: "authority:fixture", registrationId: "123" }],
   capabilities: ["boundary-survey"],
@@ -35,5 +36,13 @@ test("professional entities require a sourced identity and profession", () => {
   assert.throws(
     () => createProfessionalEntity({ ...record, profession: "  " }),
     /profession/,
+  );
+  assert.throws(
+    () => createProfessionalEntity({ ...record, identity: {} }),
+    /identity.name/,
+  );
+  assert.throws(
+    () => projectProfessionalRole(createProfessionalEntity(record), "engineer"),
+    /listed in the entity roles/,
   );
 });

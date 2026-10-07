@@ -30,15 +30,25 @@ export function createProfessionalEntity(input) {
 
   const evidence = freezeArray(input.sourceEvidence, "sourceEvidence");
   if (evidence.length === 0 || evidence.some((item) => (
-    typeof item === "string" || !item.sourceRef
+    typeof item === "string" || typeof item.sourceRef !== "string" || item.sourceRef.trim() === ""
   ))) {
     throw new TypeError("sourceEvidence must include at least one sourceRef record");
   }
 
+  const profession = requiredString(input.profession, "profession");
+  const roles = freezeArray(input.roles ?? [profession], "roles");
+  if (roles.length === 0 || roles.some((role) => typeof role !== "string")) {
+    throw new TypeError("roles must include at least one professional role");
+  }
+
   return Object.freeze({
     id: requiredString(input.id, "id"),
-    identity: Object.freeze({ ...input.identity }),
-    profession: requiredString(input.profession, "profession"),
+    identity: Object.freeze({
+      ...input.identity,
+      name: requiredString(input.identity.name, "identity.name"),
+    }),
+    profession,
+    roles,
     jurisdiction: requiredString(input.jurisdiction, "jurisdiction"),
     registrationRefs: freezeArray(input.registrationRefs ?? [], "registrationRefs"),
     capabilities: freezeArray(input.capabilities ?? [], "capabilities"),
@@ -59,8 +69,12 @@ export function projectProfessionalRole(entity, profession = entity?.profession)
   if (!entity || typeof entity !== "object") {
     throw new TypeError("professional entity is required");
   }
+  const selectedProfession = requiredString(profession, "profession");
+  if (!entity.roles?.includes(selectedProfession)) {
+    throw new TypeError("profession must be listed in the entity roles");
+  }
   return Object.freeze({
     ...entity,
-    profession: requiredString(profession, "profession"),
+    profession: selectedProfession,
   });
 }
