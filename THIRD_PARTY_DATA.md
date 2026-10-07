@@ -21,3 +21,19 @@ Before a new source is used, record:
 | Notes / uncertainty | when needed |
 
 Unknown licence standing is recorded as **unknown** and treated as non-redistributable until resolved.
+
+
+## Registered source: QLDTraffic GeoJSON API
+
+| Field | Value |
+|---|---|
+| Source name | QLDTraffic GeoJSON API |
+| Source owner / publisher | Queensland Department of Transport and Main Roads |
+| Canonical source | Queensland Government Open Data Portal / QLDTraffic API |
+| Licence | Creative Commons Attribution 4.0 |
+| Attribution | Preserve source/publisher attribution with derived uses |
+| Redistribution | Subject to CC BY 4.0 and API terms |
+| Commercial use | Permitted by CC BY 4.0 subject to licence conditions |
+| First registered in SEQ Maps | 2026-09-24 |
+| Adapter | `src/adapters/qldtraffic-events.mjs` |
+| Notes | API key required for live requests. No key is committed. Synthetic fixtures are not government data. |
