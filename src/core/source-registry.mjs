@@ -35,6 +35,7 @@ export function createSourceRecord(input) {
     attribution: input.attribution ?? null,
     redistribution: input.redistribution ?? null,
     commercialUse: input.commercialUse ?? null,
+    executionAuthority: null,
   });
 }
 
@@ -43,5 +44,8 @@ export function sourceSupports(source, requiredAuthority = "supplementary") {
   return source?.standing === "accepted"
     && minimumAuthority !== undefined
     && SOURCE_AUTHORITY_ORDER[source.authority] !== undefined
-    && SOURCE_AUTHORITY_ORDER[source.authority] >= minimumAuthority;
+    && SOURCE_AUTHORITY_ORDER[source.authority] >= minimumAuthority
+    && ["id", "name", "publisher", "jurisdiction", "canonicalUrl", "endpoint", "protocol",
+      "licence", "termsUrl", "observedAt", "reviewAt"]
+      .every((field) => typeof source[field] === "string" && source[field].trim().length > 0);
 }

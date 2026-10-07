@@ -14,6 +14,12 @@ function stringList(value, field) {
   return value.map((item) => item.trim());
 }
 
+function timestamp(value, field) {
+  const result = requiredString(value, field);
+  if (!Number.isFinite(Date.parse(result))) throw new TypeError(`${field} must be a valid date or timestamp`);
+  return result;
+}
+
 function deepFreeze(value) {
   if (value && typeof value === "object" && !Object.isFrozen(value)) {
     Object.freeze(value);
@@ -34,6 +40,8 @@ export function createProfessionalHub(input) {
   if (!input.freshness || typeof input.freshness !== "object") {
     throw new TypeError("freshness is required");
   }
+  const sourceEvidence = stringList(input.sourceEvidence, "sourceEvidence");
+  if (sourceEvidence.length === 0) throw new TypeError("sourceEvidence must contain at least one reference");
 
   return deepFreeze({
     identity: {
@@ -47,16 +55,17 @@ export function createProfessionalHub(input) {
     capabilities: stringList(input.capabilities ?? [], "capabilities"),
     serviceArea: input.serviceArea ?? null,
     contactChannels: input.contactChannels ?? [],
-    sourceEvidence: stringList(input.sourceEvidence, "sourceEvidence"),
+    sourceEvidence,
     authority: requiredString(input.authority, "authority"),
+    executionAuthority: null,
     terms: {
       standing: input.terms.standing,
       ...(input.terms.id ? { id: requiredString(input.terms.id, "terms.id") } : {}),
       ...(input.terms.url ? { url: requiredString(input.terms.url, "terms.url") } : {}),
     },
     freshness: {
-      observedAt: requiredString(input.freshness.observedAt, "freshness.observedAt"),
-      reviewAt: requiredString(input.freshness.reviewAt, "freshness.reviewAt"),
+      observedAt: timestamp(input.freshness.observedAt, "freshness.observedAt"),
+      reviewAt: timestamp(input.freshness.reviewAt, "freshness.reviewAt"),
     },
     availability: input.availability ?? null,
     relationships: input.relationships ?? [],

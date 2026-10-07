@@ -7,7 +7,7 @@
     "authority": "authoritative",
     "jurisdiction": "Queensland",
     "canonicalUrl": "https://www.data.qld.gov.au/dataset/mapsonline-api",
-    "endpoint": "https://mapsonline.information.qld.gov.au/service/environment/resource/MapsOnline/1/http/rest/getFeatureTypes",
+    "endpoint": "https://mapsonline.information.qld.gov.au/service/environment/resource/MapsOnline/1/http/rest/requestPost",
     "protocol": "rest",
     "licence": "CC BY 4.0",
     "termsUrl": "https://creativecommons.org/licenses/by/4.0/",
