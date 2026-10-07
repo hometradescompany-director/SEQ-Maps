@@ -53,4 +53,12 @@ test("professional entities require a sourced identity and jurisdiction", () => 
     }),
     /sourceEvidence\[0\]\.evidenceRef must be a non-empty string/,
   );
+  assert.throws(
+    () => createProfessionalEntity({ ...base, termsUrl: "javascript:alert(1)" }),
+    /termsUrl must be an absolute HTTP\(S\) URL/,
+  );
+  assert.throws(
+    () => createProfessionalEntity({ ...base, observedAt: "not-a-time" }),
+    /observedAt must be an ISO-compatible timestamp/,
+  );
 });

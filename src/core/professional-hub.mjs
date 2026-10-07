@@ -11,6 +11,30 @@ function stringList(value, field) {
   return Object.freeze(value.map((item, index) => requiredString(item, `${field}[${index}]`)));
 }
 
+function optionalTimestamp(value, field) {
+  if (value == null) return null;
+  const timestamp = requiredString(value, field);
+  if (Number.isNaN(Date.parse(timestamp))) {
+    throw new TypeError(`${field} must be an ISO-compatible timestamp`);
+  }
+  return timestamp;
+}
+
+function optionalUrl(value, field) {
+  if (value == null) return null;
+  const result = requiredString(value, field);
+  let parsed;
+  try {
+    parsed = new URL(result);
+  } catch {
+    throw new TypeError(`${field} must be an absolute HTTP(S) URL`);
+  }
+  if (!["http:", "https:"].includes(parsed.protocol)) {
+    throw new TypeError(`${field} must be an absolute HTTP(S) URL`);
+  }
+  return result;
+}
+
 function referenceList(value, field) {
   if (!Array.isArray(value) || value.length === 0) {
     throw new TypeError(`${field} must contain at least one source reference`);
@@ -23,13 +47,8 @@ function referenceList(value, field) {
       sourceRef: requiredString(reference.sourceRef, `${field}[${index}].sourceRef`),
       evidenceRef: requiredString(reference.evidenceRef, `${field}[${index}].evidenceRef`),
     };
-    if (reference.observedAt != null) {
-      requiredString(reference.observedAt, `${field}[${index}].observedAt`);
-      if (Number.isNaN(Date.parse(reference.observedAt))) {
-        throw new TypeError(`${field}[${index}].observedAt must be an ISO-compatible timestamp`);
-      }
-      result.observedAt = reference.observedAt;
-    }
+    const observedAt = optionalTimestamp(reference.observedAt, `${field}[${index}].observedAt`);
+    if (observedAt !== null) result.observedAt = observedAt;
     return Object.freeze(result);
   }));
 }
@@ -52,7 +71,7 @@ export function createProfessionalEntity(input) {
   if (!input || typeof input !== "object") {
     throw new TypeError("professional entity input is required");
   }
-  if (!input.identity || typeof input.identity !== "object") {
+  if (!input.identity || typeof input.identity !== "object" || Array.isArray(input.identity)) {
     throw new TypeError("identity is required");
   }
   return Object.freeze({
@@ -75,10 +94,12 @@ export function createProfessionalEntity(input) {
       ? null
       : requiredString(input.regulatorRef, "regulatorRef"),
     licence: input.licence == null ? null : requiredString(input.licence, "licence"),
-    termsUrl: input.termsUrl == null ? null : requiredString(input.termsUrl, "termsUrl"),
-    observedAt: input.observedAt == null ? null : requiredString(input.observedAt, "observedAt"),
-    reviewAt: input.reviewAt == null ? null : requiredString(input.reviewAt, "reviewAt"),
-    availability: input.availability ?? null,
+    termsUrl: optionalUrl(input.termsUrl, "termsUrl"),
+    observedAt: optionalTimestamp(input.observedAt, "observedAt"),
+    reviewAt: optionalTimestamp(input.reviewAt, "reviewAt"),
+    availability: input.availability == null
+      ? null
+      : requiredString(input.availability, "availability"),
     relationships: stringList(input.relationships, "relationships"),
   });
 }

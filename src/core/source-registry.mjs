@@ -46,9 +46,9 @@ function stringList(value, field) {
 
 export function createSourceRecord(input) {
   if (!input || typeof input !== "object") throw new TypeError("source input is required");
-  if (!input.id || !input.name || !input.publisher || !input.canonicalUrl) {
-    throw new TypeError("source id, name, publisher and canonicalUrl are required");
-  }
+  const id = requiredString(input.id, "id");
+  const name = requiredString(input.name, "name");
+  const publisher = requiredString(input.publisher, "publisher");
   const authority = input.authority ?? "unverified";
   if (!Object.hasOwn(SOURCE_AUTHORITY_ORDER, authority)) {
     throw new TypeError("source authority is not recognized");
@@ -58,8 +58,8 @@ export function createSourceRecord(input) {
     throw new TypeError("source standing must be candidate, accepted or rejected");
   }
   return Object.freeze({
-    id: String(input.id), name: String(input.name), publisher: String(input.publisher),
-    kind: input.kind ?? "unknown", authority,
+    id, name, publisher,
+    kind: optionalString(input.kind, "kind") ?? "unknown", authority,
     jurisdiction: optionalString(input.jurisdiction, "jurisdiction"),
     canonicalUrl: url(input.canonicalUrl, "canonicalUrl"),
     endpoint: input.endpoint == null ? null : url(input.endpoint, "endpoint"),
