@@ -2,7 +2,7 @@
 
 The source registry inventories machine-readable services SEQ Maps may evaluate. It is separate from the observation pipeline.
 
-Every source should carry a stable identifier, publisher, jurisdiction, canonical URL, endpoint, protocol or format, declared capability, authority standing, licence and terms, observation time, and expiry or review date where applicable.
+The `createSourceRecord` contract in `src/core/source-registry.mjs` normalizes immutable source records. It retains a stable identifier, publisher, jurisdiction, canonical URL, optional endpoint, protocol or format, declared capabilities, authority level, licence and terms URL, observation time, and expiry or review date where supplied. URLs must be absolute HTTP(S) URLs; source standing is `candidate`, `accepted` or `rejected`.
 
 Discovery creates a candidate. It does not create permission, trust or execution authority. A source becomes accepted only after its endpoint, publisher, authority scope and licence/terms standing have been verified.
 
