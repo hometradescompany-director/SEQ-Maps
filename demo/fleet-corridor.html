@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SEQ Maps | Fleet Corridor Proof</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+html,body{height:100%;margin:0;font:15px system-ui;background:#101a23;color:#edf4f7}
+header{padding:14px 18px;background:#122e36}header strong{font-size:19px}header small{display:block;color:#9cc8c8;margin-top:4px}
+main{display:grid;grid-template-columns:minmax(0,1fr) 320px;height:calc(100% - 86px)}
+#map{min-height:350px}aside{padding:20px;overflow:auto;background:#14242b}
+label{display:block;margin:12px 0 4px;color:#9cc8c8}#details{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.notice{background:#3c2f19;padding:10px;border-radius:8px;color:#ffe5a8}
+@media(max-width:700px){main{grid-template-columns:1fr;grid-template-rows:55% 45%}}
+</style></head><body>
+<header><strong>SEQ Maps · Fleet Corridor Proof</strong><small>Map prototype · synthetic asset fixture · no government data connection</small></header>
+<main><div id="map" aria-label="Interactive map"></div><aside><div class="notice">DEMONSTRATION ONLY. Locations and assets below are synthetic examples, not council records. Access and route permission are not established.</div>
+<h2>Asset evidence</h2><div id="details">Select a point to inspect its source and evidence standing.</div></aside></main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script type="module">
+import { projectFleetMapLayer } from "../src/core/fleet-map-layer.mjs";
+const obs=(id)=>({id:"obs-"+id,kind:"asset.observed",sourceRef:"synthetic-fixture",subjectRef:id,validAt:"2026-10-09T01:00:00Z",knownAt:"2026-10-09T02:00:00Z",ingestedAt:"2026-10-09T03:00:00Z",license:{standing:"declared",id:"synthetic-fixture-only"},evidenceRef:"fixture-"+id});
+const records=[
+{assetRef:"fictional-drain-01",segmentRef:"demo-segment-A",assetClass:"drainage",coordinates:[153.187,-27.673],observation:obs("fictional-drain-01")},
+{assetRef:"fictional-light-02",segmentRef:"demo-segment-A",assetClass:"streetlight",coordinates:[153.191,-27.670],observation:obs("fictional-light-02")},
+{assetRef:"fictional-water-03",segmentRef:"demo-segment-B",assetClass:"water",coordinates:[153.194,-27.675],observation:obs("fictional-water-03")}
+];
+const layer=projectFleetMapLayer(records);
+const map=L.map("map").setView([-27.673,153.19],14);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OpenStreetMap contributors",maxZoom:19}).addTo(map);
+const detail=document.getElementById("details");
+for(const feature of layer.features){
+  const [lon,lat]=feature.geometry.coordinates;
+  const marker=L.circleMarker([lat,lon],{radius:9,color:"#0b5260",fillColor:"#4ce0cb",fillOpacity:.9}).addTo(map);
+  marker.bindTooltip(feature.properties.assetClass+" · synthetic");
+  marker.on("click",()=>{
+    const p=feature.properties;
+    detail.textContent=[
+      "Asset: "+p.assetRef,"Class: "+p.assetClass,"Road segment: "+p.segmentRef,
+      "Source: "+p.sourceRef,"Licence: "+p.licenseId,"Evidence: "+(p.evidenceRef??"unknown"),
+      "Valid at: "+p.validAt,"Known at: "+p.knownAt,"Ingested at: "+p.ingestedAt,
+      "Property access: "+p.accessStanding,"Routing: "+p.routeStanding
+    ].join("\n");
+  });
+}
+</script></body></html>
