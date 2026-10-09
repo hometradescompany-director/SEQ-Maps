@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SEQ Maps · Civic Landmarks</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+html,body{margin:0;height:100%;font:15px system-ui;background:#111e28;color:#eef8f7}
+header{padding:15px 20px;background:#17323d}h1{margin:0;font-size:21px}small{color:#a9c8c8}
+main{display:grid;grid-template-columns:minmax(0,1fr) 340px;height:calc(100% - 82px)}#map{min-height:360px}
+aside{padding:18px;overflow:auto}button{background:#246e72;border:0;border-radius:6px;color:white;padding:10px 14px;cursor:pointer}
+button:disabled{opacity:.6}#status{margin:12px 0;color:#b9d1ce}#details{white-space:pre-wrap;line-height:1.5;overflow-wrap:anywhere}
+.notice{padding:10px;border:1px solid #b99c5b;border-radius:8px;color:#f5dbab}
+@media(max-width:760px){main{grid-template-columns:1fr;grid-template-rows:55% 45%}}
+</style></head><body>
+<header><h1>SEQ Maps · Civic Landmark Explorer</h1><small>Public hospitals and council offices · evidence-aware discovery prototype</small></header>
+<main><div id="map" aria-label="Map of civic landmarks"></div><aside>
+<p class="notice">Public OpenStreetMap community data, not an official government inventory. Missing features do not imply missing facilities. Verify names, access and operating status with the responsible authority.</p>
+<button id="load">Discover public landmarks in view</button><p id="status">Move the map to a Queensland area, then discover landmarks.</p>
+<h2>Feature evidence</h2><div id="details">Select a discovered landmark to inspect its source tags and timestamp.</div>
+<p><small>Data © OpenStreetMap contributors, ODbL. Discovery through the public Overpass API, subject to availability and usage limits. No personal, patient or workforce data is requested.</small></p>
+</aside></main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map("map").setView([-27.47,153.03],12);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors"}).addTo(map);
+const layer=L.layerGroup().addTo(map),button=document.getElementById("load"),status=document.getElementById("status"),details=document.getElementById("details");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+button.onclick=async()=>{
+ const b=map.getBounds(),south=b.getSouth(),west=b.getWest(),north=b.getNorth(),east=b.getEast();
+ if((north-south)*(east-west)>0.5){status.textContent="Zoom in before querying; the public service is not for bulk extraction.";return;}
+ button.disabled=true;status.textContent="Requesting mapped public landmarks…";layer.clearLayers();
+ const box=[south,west,north,east].join(",");
+ const query='[out:json][timeout:20];(nwr["amenity"="hospital"]('+box+');nwr["amenity"="townhall"]('+box+');nwr["office"="government"]('+box+'););out center 100;';
+ try{
+  const response=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({data:query})});
+  if(!response.ok)throw new Error("Public source HTTP "+response.status);
+  const data=await response.json();let count=0;
+  for(const e of data.elements??[]){
+   const lat=e.lat??e.center?.lat,lon=e.lon??e.center?.lon;
+   if(!Number.isFinite(lat)||!Number.isFinite(lon))continue;
+   const t=e.tags??{},name=t.name??"Unnamed mapped facility";
+   const category=t.amenity==="hospital"?"Hospital":t.amenity==="townhall"?"Council / town hall":"Government office";
+   const m=L.circleMarker([lat,lon],{radius:8,color:category==="Hospital"?"#9b3434":"#245b79",fillOpacity:.8}).addTo(layer);
+   m.bindTooltip(esc(name));m.on("click",()=>{
+    details.textContent=[
+     "Name: "+name,"Category: "+category,"OSM element: "+e.type+"/"+e.id,
+     "OSM last edited: "+(e.timestamp??"unknown"),"OSM tags: "+JSON.stringify(t,null,2),
+     "Coordinates: "+lat+", "+lon,
+     "Source: OpenStreetMap contributors / Overpass",
+     "Government validation: not established","Facility access: not established"
+    ].join("\n");
+   });count++;
+  }
+  status.textContent=count+" public-map features found in current view. Inspect and verify before presenting as authoritative.";
+ }catch(error){status.textContent="Discovery unavailable: "+error.message+". Existing map remains usable."}
+ finally{button.disabled=false;}
+};
+</script></body></html>
