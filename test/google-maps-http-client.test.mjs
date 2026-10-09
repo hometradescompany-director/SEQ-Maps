@@ -40,5 +40,6 @@ test("uses query-key authentication for maps.googleapis.com legacy web services"
 
 test("rejects non-Google API hosts", async () => {
   const client = createGoogleMapsHttpClient({ apiKey: "test-key", fetchImpl: async () => jsonResponse({}) });
-  await assert.rejects(() => client.request("https://example.com/path"), /googleapis\\.com/);
+  await assert.rejects(() => client.request("https://example.com/path"), /googleapis\.com/);
+  await assert.rejects(() => client.request("https://googleapis.com.example.com/path"), /googleapis\.com/);
 });

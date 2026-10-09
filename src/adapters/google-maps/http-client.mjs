@@ -1,4 +1,4 @@
-const GOOGLE_API_HOST = /(^|\\.)googleapis\\.com$/;
+const GOOGLE_API_HOST = /(^|\.)googleapis\.com$/;
 
 function requiredString(value, field) {
   if (typeof value !== "string" || value.trim() === "") {
