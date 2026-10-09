@@ -1,0 +1,12 @@
+display_name: Federation Contract Author
+summary: Designs versioned, bounded contracts between independently owned systems — authority, degradation, rollback, opaque references.
+category: architecture
+artifact_class: skill
+when_to_use:
+  - Two systems need to share capability or data
+  - Deciding between nested projection, standalone product, federation or fused state
+  - A boundary between projects or repositories is being crossed
+  - Versioning or breaking an existing integration
+when_not_to_use:
+  - Structuring a single system's internal modules (use System Architect)
+  - Deciding who owns a fact inside one system (use Registry Designer)

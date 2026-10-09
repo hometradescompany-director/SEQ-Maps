@@ -1,0 +1,23 @@
+{
+  "source_repository": "hometradescompany-director/skills-foundry",
+  "source_tree_sha": "06988a9928d4947ca4e61bfe8b53445696e9774e",
+  "installation": "Owner-authorised unchanged skill snapshots; no upstream licence inferred",
+  "files": [
+    {
+      "path": ".agents/skills/federation-contract-author/SKILL.md",
+      "git_blob_sha": "78a37963819254eac3718ea6b769552fc5ea3f55"
+    },
+    {
+      "path": ".agents/skills/federation-contract-author/agents/openai.yaml",
+      "git_blob_sha": "16918b44e1ebdb79ce6bfe95cac08cc94be1e15c"
+    },
+    {
+      "path": ".agents/skills/provenance-guardian/SKILL.md",
+      "git_blob_sha": "fdc33807fc9f7dbeb0bb73514a3af5c1d744003b"
+    },
+    {
+      "path": ".agents/skills/provenance-guardian/agents/openai.yaml",
+      "git_blob_sha": "14bfd04c9b05caa1b708ef42699d73110c0149a6"
+    }
+  ]
+}
