@@ -34,6 +34,12 @@ The first deployment target will be a bounded Southeast Queensland corridor sele
 
 Bootstrap stage. Architecture and contracts come before UI.
 
+The next proof bridge now connects normalized observations to explicit, evidenced
+road-segment references, attributable events, historical context replay and a
+read-only API handler. Run `npm run proof:segment` for the synthetic demonstration.
+See [segment context](docs/SEGMENT_CONTEXT.md) for usage, evidence limits and
+[contextual skill applicability](docs/SKILL_APPLICABILITY.md).
+
 ## Licence
 
 Software in this repository is licensed under the Apache License 2.0 unless a file states otherwise.
@@ -43,3 +49,4 @@ External datasets, APIs and source material retain their own licences and terms.
 ## Engineering doctrine
 
 For the shared **POS Systems / “Welcome to the Shit Show”** engineering posture and its application in this repository, see [README.POS.md](README.POS.md).
+

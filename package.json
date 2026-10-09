@@ -10,6 +10,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "check": "node --test"
+    "check": "node --test",
+    "proof:segment": "node scripts/segment-context-proof.mjs"
   }
 }
+
