@@ -10,6 +10,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "check": "node --test"
+    "check": "node --test",
+    "gcp:maps:plan": "node scripts/gcp/enable-google-maps-platform.mjs --dry-run",
+    "gcp:maps:enable": "node scripts/gcp/enable-google-maps-platform.mjs --apply"
   }
 }
