@@ -8,6 +8,7 @@ const EVENT_TYPES = new Set([
   "air_quality.observed",
   "weather.wind.observed",
   "fire.warning.issued",
+  "observation.retracted",
 ]);
 const SOURCE_TYPES = new Set([
   "human_observation",
@@ -18,6 +19,8 @@ const SOURCE_TYPES = new Set([
 ]);
 const CONFIDENCE_LEVELS = new Set(["unassessed", "low", "medium", "high"]);
 const VERIFICATION_STATUSES = new Set(["unverified", "corroborated", "official"]);
+const LICENSE_STANDINGS = new Set(["declared", "missing", "unknown"]);
+const EVIDENCE_STATUSES = new Set(["available", "not_provided", "revoked"]);
 
 export const PUBLIC_EMERGENCY_GUIDANCE = Object.freeze([
   Object.freeze({
@@ -50,6 +53,17 @@ function timestamp(value, field, { nullable = false } = {}) {
   return value;
 }
 
+function normalizeLicense(license) {
+  if (!license || !LICENSE_STANDINGS.has(license.standing)) {
+    throw new TypeError("license.standing must be declared, missing or unknown");
+  }
+  if (license.standing === "declared") requiredString(license.id, "license.id");
+  return Object.freeze({
+    standing: license.standing,
+    ...(license.id ? { id: license.id } : {}),
+  });
+}
+
 export function createSituationalAwarenessEvent(input) {
   if (!input || typeof input !== "object") {
     throw new TypeError("event input is required");
@@ -78,6 +92,9 @@ export function createSituationalAwarenessEvent(input) {
   if (input.eventType === "plume.inferred" && input.sourceType !== "derived") {
     throw new TypeError("inferred plume events require a derived source");
   }
+  if (input.eventType === "observation.retracted" && !input.retracts) {
+    throw new TypeError("retracted observations require a retracts reference");
+  }
 
   if (!input.location || typeof input.location !== "object") {
     throw new TypeError("coarse location is required");
@@ -85,6 +102,16 @@ export function createSituationalAwarenessEvent(input) {
   const locationFields = Object.keys(input.location);
   if (locationFields.some((field) => !["locality", "jurisdiction"].includes(field))) {
     throw new TypeError("location may contain only locality and jurisdiction");
+  }
+
+  if (!EVIDENCE_STATUSES.has(input.evidenceStatus)) {
+    throw new TypeError("evidenceStatus must be available, not_provided or revoked");
+  }
+  if (input.evidenceStatus === "available" && !input.evidenceRef) {
+    throw new TypeError("available evidence requires an evidenceRef");
+  }
+  if (input.evidenceStatus !== "available" && input.evidenceRef !== null) {
+    throw new TypeError("unavailable or revoked evidence must not expose an evidenceRef");
   }
 
   const event = {
@@ -105,12 +132,17 @@ export function createSituationalAwarenessEvent(input) {
     }),
     confidence: input.confidence,
     verificationStatus: input.verificationStatus,
+    license: normalizeLicense(input.license),
+    evidenceStatus: input.evidenceStatus,
     evidenceRef: input.evidenceRef === null
       ? null
       : requiredString(input.evidenceRef, "evidenceRef"),
     correctionOf: input.correctionOf === null || input.correctionOf === undefined
       ? null
       : requiredString(input.correctionOf, "correctionOf"),
+    retracts: input.retracts === null || input.retracts === undefined
+      ? null
+      : requiredString(input.retracts, "retracts"),
   };
 
   if (event.eventType === "smoke.observed") {

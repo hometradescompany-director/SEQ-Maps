@@ -30,6 +30,10 @@ source
 
 The first deployment target will be a bounded Southeast Queensland corridor selected for measurable usefulness, not maximum feature count.
 
+## Situational awareness
+
+The smoke/bushfire event contract and its source, licensing, privacy, and pilot boundaries are documented in [Situational awareness](docs/SITUATIONAL_AWARENESS.md). No live fire, air-quality, weather, or council feed is enabled.
+
 ## Repository status
 
 Bootstrap stage. Architecture and contracts come before UI.

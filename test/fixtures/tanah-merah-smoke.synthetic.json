@@ -16,7 +16,12 @@
     },
     "confidence": "unassessed",
     "verificationStatus": "unverified",
+    "license": {
+      "standing": "unknown"
+    },
+    "evidenceStatus": "not_provided",
     "evidenceRef": null,
-    "correctionOf": null
+    "correctionOf": null,
+    "retracts": null
   }
 }

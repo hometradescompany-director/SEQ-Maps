@@ -32,6 +32,8 @@ test("Tanah Merah trigger is only an unverified, coarse smoke observation", () =
   assert.equal(event.sourceTimestampText, "2026-10-14 ~15:42 AEST");
   assert.equal(event.validAt, null);
   assert.equal(event.knownAt, "2026-10-14T15:42:00+10:00");
+  assert.deepEqual(event.license, { standing: "unknown" });
+  assert.equal(event.evidenceStatus, "not_provided");
   assert.deepEqual(event.location, {
     locality: "Tanah Merah",
     jurisdiction: "Logan, Queensland",
@@ -65,6 +67,7 @@ test("keeps observation and official incident records separately identifiable", 
     sourceRef: "source:qld-fire-incidents",
     sourceType: "official_feed",
     verificationStatus: "official",
+    evidenceStatus: "available",
     evidenceRef: "evidence:qld-fire:123",
   });
   const smoke = smokeEvent();
@@ -102,6 +105,19 @@ test("corrections link to, but do not replace, the original observation", () => 
   assert.equal(events.length, 2);
   assert.equal(events[0].correctionOf, null);
   assert.equal(events[1].correctionOf, original.id);
+});
+
+test("withdrawals remain explicit and do not silently delete the original record", () => {
+  const original = smokeEvent();
+  const withdrawal = smokeEvent({
+    id: "observation:tanah-merah-smoke:withdrawal-1",
+    eventType: "observation.retracted",
+    knownAt: "2026-10-14T16:20:00+10:00",
+    retracts: original.id,
+  });
+  const events = deduplicateSituationalAwarenessEvents([original, withdrawal]);
+  assert.equal(events.length, 2);
+  assert.equal(events[1].retracts, original.id);
 });
 
 test("marks stale and unavailable candidate feeds instead of implying fresh data", () => {
