@@ -71,8 +71,9 @@ export function createSituationalAwarenessEvent(input) {
     && (input.sourceType !== "human_observation" || input.verificationStatus !== "unverified")) {
     throw new TypeError("human smoke reports must remain explicitly unverified observations");
   }
-  if (input.eventType === "fire.confirmed" && input.sourceType !== "official_feed") {
-    throw new TypeError("confirmed fire events require an official feed source");
+  if (["fire.confirmed", "fire.warning.issued", "burn.prescribed"].includes(input.eventType)
+    && (input.sourceType !== "official_feed" || input.verificationStatus !== "official")) {
+    throw new TypeError("official fire events require an official source and status");
   }
   if (input.eventType === "plume.inferred" && input.sourceType !== "derived") {
     throw new TypeError("inferred plume events require a derived source");
@@ -91,6 +92,9 @@ export function createSituationalAwarenessEvent(input) {
     eventType: input.eventType,
     sourceRef: requiredString(input.sourceRef, "sourceRef"),
     sourceType: input.sourceType,
+    sourceTimestampText: input.sourceTimestampText === null || input.sourceTimestampText === undefined
+      ? null
+      : requiredString(input.sourceTimestampText, "sourceTimestampText"),
     validAt: timestamp(input.validAt, "validAt", { nullable: true }),
     knownAt: timestamp(input.knownAt, "knownAt"),
     ingestedAt: timestamp(input.ingestedAt, "ingestedAt"),

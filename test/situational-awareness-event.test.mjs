@@ -29,6 +29,7 @@ test("Tanah Merah trigger is only an unverified, coarse smoke observation", () =
   assert.equal(event.sourceType, "human_observation");
   assert.equal(event.verificationStatus, "unverified");
   assert.equal(event.confidence, "unassessed");
+  assert.equal(event.sourceTimestampText, "2026-10-14 ~15:42 AEST");
   assert.equal(event.validAt, null);
   assert.equal(event.knownAt, "2026-10-14T15:42:00+10:00");
   assert.deepEqual(event.location, {
@@ -44,7 +45,7 @@ test("Tanah Merah trigger is only an unverified, coarse smoke observation", () =
 test("does not promote human observations to confirmed fires or inferred plumes", () => {
   assert.throws(
     () => smokeEvent({ eventType: "fire.confirmed" }),
-    /confirmed fire events require an official feed source/
+    /official fire events require an official source and status/
   );
   assert.throws(
     () => smokeEvent({ eventType: "plume.inferred" }),

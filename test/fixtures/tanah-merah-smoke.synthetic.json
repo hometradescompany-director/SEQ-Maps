@@ -5,6 +5,7 @@
     "eventType": "smoke.observed",
     "sourceRef": "source:human-report:issue-16",
     "sourceType": "human_observation",
+    "sourceTimestampText": "2026-10-14 ~15:42 AEST",
     "validAt": null,
     "knownAt": "2026-10-14T15:42:00+10:00",
     "ingestedAt": "2026-10-14T22:59:09Z",
