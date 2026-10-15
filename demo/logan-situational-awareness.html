@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7f8">
+  <title>Logan situational-awareness demonstration | SEQ Maps</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #19323b;
+      background: #f4f7f8;
+      line-height: 1.5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    a {
+      color: #075c75;
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.16em;
+    }
+
+    a:focus-visible {
+      outline: 3px solid #a33b00;
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -5rem;
+      padding: 0.75rem;
+      background: white;
+      z-index: 1;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    .page {
+      width: min(100% - 2rem, 52rem);
+      margin: 0 auto;
+      padding: 1.5rem 0 3rem;
+    }
+
+    .banner,
+    .card {
+      border: 1px solid #c7d5da;
+      border-radius: 0.75rem;
+      background: white;
+      padding: 1rem;
+    }
+
+    .banner {
+      border-left: 0.4rem solid #8b3e00;
+      margin: 1rem 0;
+    }
+
+    .card {
+      margin-top: 1rem;
+    }
+
+    .label {
+      display: inline-block;
+      border-radius: 999px;
+      background: #fce9d8;
+      color: #612900;
+      font-size: 0.875rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+    }
+
+    .status {
+      font-weight: 700;
+    }
+
+    dl {
+      display: grid;
+      grid-template-columns: minmax(9rem, 1fr) 2fr;
+      gap: 0.5rem 1rem;
+      margin-bottom: 0;
+    }
+
+    dt {
+      font-weight: 700;
+    }
+
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    ul {
+      padding-left: 1.25rem;
+    }
+
+    li + li {
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 36rem) {
+      .page {
+        width: min(100% - 1.25rem, 52rem);
+        padding-top: 0.75rem;
+      }
+
+      dl {
+        grid-template-columns: 1fr;
+        gap: 0.15rem;
+      }
+
+      dd + dt {
+        margin-top: 0.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to demonstration</a>
+  <div class="page">
+    <header>
+      <p class="label">Synthetic demonstration · not live data</p>
+      <h1>Logan situational awareness</h1>
+      <p>A read-only locality example showing how observations and source availability are kept distinct.</p>
+    </header>
+
+    <main id="main">
+      <section class="banner" aria-labelledby="scope-heading">
+        <h2 id="scope-heading">Demonstration only — not emergency guidance</h2>
+        <p>This page uses synthetic examples only. It does not contact feeds, confirm an incident, or provide operational advice. Check the original Queensland sources below for current information.</p>
+        <p>This view contains no reporter identity, street address, precise location, or private fleet/site records.</p>
+      </section>
+
+      <section aria-labelledby="observation-heading">
+        <h2 id="observation-heading">Human smoke observation</h2>
+        <article class="card">
+          <p><span class="label">Synthetic fixture</span> <span class="label">Unverified</span></p>
+          <h3>Smoke report · Tanah Merah, Logan</h3>
+          <p class="status">Unverified observation — this does not confirm a fire, its origin, or current official warning status.</p>
+          <dl>
+            <dt>Source</dt>
+            <dd>Synthetic human observation (source reference: source:human-report:issue-16)</dd>
+            <dt>Source time</dt>
+            <dd>2026-10-14 ~15:42 AEST (reported time; occurrence time unknown)</dd>
+            <dt>Known to demonstration</dt>
+            <dd>2026-10-14 15:42 AEST</dd>
+            <dt>Confidence</dt>
+            <dd>Unassessed</dd>
+            <dt>Verification</dt>
+            <dd>Unverified human report</dd>
+            <dt>Licence standing</dt>
+            <dd>Unknown; not cleared for redistribution</dd>
+            <dt>Evidence</dt>
+            <dd>Not provided</dd>
+            <dt>Freshness</dt>
+            <dd>Expired demonstration observation; sample expiry was 2026-10-14 17:42 AEST</dd>
+            <dt>Expiry</dt>
+            <dd>2026-10-14 17:42 AEST</dd>
+            <dt>Correction / retraction</dt>
+            <dd>No correction or retraction is included in this fixture. Those are separate records and do not erase the original.</dd>
+          </dl>
+        </article>
+      </section>
+
+      <section aria-labelledby="official-heading">
+        <h2 id="official-heading">Official-source example</h2>
+        <article class="card">
+          <p><span class="label">Synthetic feed status</span> <span class="label">No official event loaded</span></p>
+          <h3>Queensland current incidents</h3>
+          <p class="status">Unavailable in this demonstration. No official incident records are supplied or implied; this does not establish that no incident exists.</p>
+          <dl>
+            <dt>Source</dt>
+            <dd>Queensland Fire Department public information page</dd>
+            <dt>Checked</dt>
+            <dd>2026-10-14 22:59:09 UTC (synthetic fixture time)</dd>
+            <dt>Last successful update</dt>
+            <dd>Not available</dd>
+            <dt>Verification / licence</dt>
+            <dd>No event to verify; reuse terms for a machine-readable feed have not been verified</dd>
+          </dl>
+          <p><a href="https://www.fire.qld.gov.au/Current-Incidents" rel="noopener noreferrer">Open Queensland current incidents</a></p>
+        </article>
+
+        <article class="card">
+          <p><span class="label">Synthetic feed status</span> <span class="label">Stale</span></p>
+          <h3>Air-quality information</h3>
+          <p class="status">Stale synthetic status example. No air-quality reading is displayed.</p>
+          <dl>
+            <dt>Source</dt>
+            <dd>Queensland Government air-quality information</dd>
+            <dt>Checked</dt>
+            <dd>2026-10-14 22:59:09 UTC (synthetic fixture time)</dd>
+            <dt>Last successful update</dt>
+            <dd>2026-10-14 20:00:00 UTC (synthetic fixture time)</dd>
+            <dt>Freshness</dt>
+            <dd>Stale; older than the synthetic 15-minute maximum age</dd>
+          </dl>
+          <p><a href="https://apps.des.qld.gov.au/air-quality/health/" rel="noopener noreferrer">Open Queensland smoke and dust health information</a></p>
+        </article>
+      </section>
+
+      <section aria-labelledby="guidance-heading">
+        <h2 id="guidance-heading">Official guidance links</h2>
+        <p>These links go to the original authorities; they are not incident data or evidence for the synthetic observation.</p>
+        <ul>
+          <li><a href="https://www.qld.gov.au/emergency/dealing-disasters/disaster-types/bushfires" rel="noopener noreferrer">Queensland bushfire safety</a></li>
+          <li><a href="https://www.fire.qld.gov.au/Current-Incidents" rel="noopener noreferrer">Queensland current incidents</a></li>
+          <li><a href="https://apps.des.qld.gov.au/air-quality/health/" rel="noopener noreferrer">Queensland smoke and dust health information</a></li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      <p>SEQ Maps prototype. No external API, live feed, map service, location inference, or private data is used.</p>
+    </footer>
+  </div>
+</body>
+</html>
