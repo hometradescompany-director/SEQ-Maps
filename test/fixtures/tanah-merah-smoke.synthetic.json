@@ -1,0 +1,27 @@
+{
+  "fixtureStatus": "synthetic scenario from the issue description; not a live feed or independently verified incident",
+  "event": {
+    "id": "observation:tanah-merah-smoke:issue-16",
+    "eventType": "smoke.observed",
+    "sourceRef": "source:human-report:issue-16",
+    "sourceType": "human_observation",
+    "sourceTimestampText": "2026-10-14 ~15:42 AEST",
+    "validAt": null,
+    "knownAt": "2026-10-14T15:42:00+10:00",
+    "ingestedAt": "2026-10-14T22:59:09Z",
+    "expiresAt": "2026-10-14T17:42:00+10:00",
+    "location": {
+      "locality": "Tanah Merah",
+      "jurisdiction": "Logan, Queensland"
+    },
+    "confidence": "unassessed",
+    "verificationStatus": "unverified",
+    "license": {
+      "standing": "unknown"
+    },
+    "evidenceStatus": "not_provided",
+    "evidenceRef": null,
+    "correctionOf": null,
+    "retracts": null
+  }
+}

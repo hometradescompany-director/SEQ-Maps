@@ -1,0 +1,18 @@
+{
+  "fixtureStatus": "synthetic feed-health fixtures; no live feed was polled",
+  "feeds": [
+    {
+      "sourceRef": "source:qld-fire-incidents:candidate",
+      "state": "unavailable",
+      "checkedAt": "2026-10-14T22:59:09Z",
+      "lastSuccessfulAt": null
+    },
+    {
+      "sourceRef": "source:air-quality:candidate",
+      "state": "available",
+      "checkedAt": "2026-10-14T22:59:09Z",
+      "lastSuccessfulAt": "2026-10-14T20:00:00Z",
+      "maxAgeMs": 900000
+    }
+  ]
+}
