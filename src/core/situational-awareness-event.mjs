@@ -47,7 +47,40 @@ function requiredString(value, field) {
 function timestamp(value, field, { nullable = false } = {}) {
   if (nullable && value === null) return null;
   requiredString(value, field);
-  if (!/(?:Z|[+-]\d{2}:\d{2})$/i.test(value) || Number.isNaN(Date.parse(value))) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|([+-])(\d{2}):(\d{2}))$/i.exec(value);
+  if (!match || match[0] !== value) {
+    throw new TypeError(`${field} must include an ISO timestamp and timezone`);
+  }
+  const [, year, month, day, hour, minute, second, , , , offsetHour, offsetMinute] = match;
+  const yearNumber = Number(year);
+  const monthNumber = Number(month);
+  const dayNumber = Number(day);
+  const daysInMonth = [
+    31,
+    yearNumber % 4 === 0 && (yearNumber % 100 !== 0 || yearNumber % 400 === 0) ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ][monthNumber - 1];
+  if (
+    monthNumber < 1
+    || monthNumber > 12
+    || dayNumber < 1
+    || dayNumber > daysInMonth
+    || Number(hour) > 23
+    || Number(minute) > 59
+    || Number(second) > 59
+    || Number(offsetHour) > 23
+    || Number(offsetMinute) > 59
+    || Number.isNaN(Date.parse(value))
+  ) {
     throw new TypeError(`${field} must include an ISO timestamp and timezone`);
   }
   return value;
@@ -57,10 +90,13 @@ function normalizeLicense(license) {
   if (!license || !LICENSE_STANDINGS.has(license.standing)) {
     throw new TypeError("license.standing must be declared, missing or unknown");
   }
-  if (license.standing === "declared") requiredString(license.id, "license.id");
+  const id = license.id;
+  if (license.standing === "declared" || (id !== null && id !== undefined)) {
+    requiredString(id, "license.id");
+  }
   return Object.freeze({
     standing: license.standing,
-    ...(license.id ? { id: license.id } : {}),
+    ...(id !== null && id !== undefined ? { id } : {}),
   });
 }
 
@@ -81,9 +117,19 @@ export function createSituationalAwarenessEvent(input) {
   if (!VERIFICATION_STATUSES.has(input.verificationStatus)) {
     throw new TypeError("verificationStatus is not supported");
   }
-  if (input.eventType === "smoke.observed"
-    && (input.sourceType !== "human_observation" || input.verificationStatus !== "unverified")) {
-    throw new TypeError("human smoke reports must remain explicitly unverified observations");
+  if (input.eventType === "smoke.observed") {
+    if (input.sourceType === "human_observation" && input.verificationStatus !== "unverified") {
+      throw new TypeError("human smoke reports must remain explicitly unverified observations");
+    }
+    if (input.sourceType === "official_feed" && input.verificationStatus !== "official") {
+      throw new TypeError("official smoke observations require an official source and status");
+    }
+    if (input.sourceType === "derived" && input.verificationStatus !== "corroborated") {
+      throw new TypeError("derived smoke observations require a corroborated status");
+    }
+    if (!["human_observation", "official_feed", "derived"].includes(input.sourceType)) {
+      throw new TypeError("smoke observations require human, official or derived provenance");
+    }
   }
   if (["fire.confirmed", "fire.warning.issued", "burn.prescribed"].includes(input.eventType)
     && (input.sourceType !== "official_feed" || input.verificationStatus !== "official")) {
@@ -145,8 +191,20 @@ export function createSituationalAwarenessEvent(input) {
       : requiredString(input.retracts, "retracts"),
   };
 
+  if (event.retracts !== null && event.eventType !== "observation.retracted") {
+    throw new TypeError("retracts is only valid on observation.retracted events");
+  }
+  if (event.correctionOf === event.id) {
+    throw new TypeError("correctionOf must not reference the event itself");
+  }
+  if (event.retracts === event.id) {
+    throw new TypeError("retracts must not reference the event itself");
+  }
+
   if (event.eventType === "smoke.observed") {
-    event.publicMessage = "Observed smoke report. Source unverified; this does not confirm a fire, its origin, or current official warning status.";
+    event.publicMessage = event.sourceType === "human_observation"
+      ? "Observed smoke report. Source unverified; this does not confirm a fire, its origin, or current official warning status."
+      : `Smoke observation. Verification status: ${event.verificationStatus}; this does not confirm a fire, its origin, or current official warning status.`;
   }
 
   return Object.freeze(event);

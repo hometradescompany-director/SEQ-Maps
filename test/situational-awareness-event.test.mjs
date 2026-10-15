@@ -59,6 +59,34 @@ test("does not promote human observations to confirmed fires or inferred plumes"
   );
 });
 
+test("allows official and corroborated derived smoke observations with matching provenance", () => {
+  const official = smokeEvent({
+    id: "official-smoke:123",
+    sourceType: "official_feed",
+    verificationStatus: "official",
+  });
+  const derived = smokeEvent({
+    id: "derived-smoke:123",
+    sourceType: "derived",
+    verificationStatus: "corroborated",
+  });
+
+  assert.equal(official.sourceType, "official_feed");
+  assert.equal(official.verificationStatus, "official");
+  assert.equal(derived.sourceType, "derived");
+  assert.equal(derived.verificationStatus, "corroborated");
+  assert.match(official.publicMessage, /Verification status: official/);
+  assert.match(derived.publicMessage, /Verification status: corroborated/);
+  assert.throws(
+    () => smokeEvent({ sourceType: "official_feed" }),
+    /official smoke observations require an official source and status/
+  );
+  assert.throws(
+    () => smokeEvent({ sourceType: "derived" }),
+    /derived smoke observations require a corroborated status/
+  );
+});
+
 test("keeps observation and official incident records separately identifiable", () => {
   const fire = createSituationalAwarenessEvent({
     ...smokeFixture.event,
@@ -83,6 +111,11 @@ test("preserves source timezone offsets and compares equivalent instants", () =>
   assert.equal(event.knownAt, offsetTime);
   assert.equal(Date.parse(event.knownAt), Date.parse(utcTime));
   assert.throws(() => smokeEvent({ knownAt: "2026-10-14T15:42:00" }), /include an ISO timestamp and timezone/);
+  assert.throws(() => smokeEvent({ knownAt: "2026-02-30T15:42:00Z" }), /include an ISO timestamp and timezone/);
+  assert.throws(() => smokeEvent({ validAt: "2026-10-4T15:42:00Z" }), /include an ISO timestamp and timezone/);
+  assert.throws(() => smokeEvent({ expiresAt: "2026-10-14 15:42:00Z" }), /include an ISO timestamp and timezone/);
+  assert.throws(() => smokeEvent({ knownAt: "2026-10-14T15:42:00Z\n" }), /include an ISO timestamp and timezone/);
+  assert.equal(smokeEvent({ knownAt: "2024-02-29T15:42:00+10:00" }).knownAt, "2024-02-29T15:42:00+10:00");
 });
 
 test("deduplicates exact replay but rejects conflicting records with the same id", () => {
@@ -120,6 +153,47 @@ test("withdrawals remain explicit and do not silently delete the original record
   assert.equal(events[1].retracts, original.id);
 });
 
+test("only retraction events may include a retracts reference", () => {
+  assert.throws(
+    () => smokeEvent({ retracts: "observation:other" }),
+    /retracts is only valid on observation\.retracted events/
+  );
+});
+
+test("correction and retraction references cannot point to the event itself", () => {
+  assert.throws(
+    () => smokeEvent({ correctionOf: smokeFixture.event.id }),
+    /correctionOf must not reference the event itself/
+  );
+  assert.throws(
+    () => smokeEvent({
+      eventType: "observation.retracted",
+      retracts: smokeFixture.event.id,
+    }),
+    /retracts must not reference the event itself/
+  );
+});
+
+test("validates and snapshots every supplied licence ID", () => {
+  for (const standing of ["missing", "unknown"]) {
+    assert.throws(
+      () => smokeEvent({ license: { standing, id: { value: "mutable" } } }),
+      /license\.id must be a non-empty string/
+    );
+    assert.throws(
+      () => smokeEvent({ license: { standing, id: "" } }),
+      /license\.id must be a non-empty string/
+    );
+  }
+
+  const license = { standing: "unknown", id: "licence:source-1" };
+  const event = smokeEvent({ license });
+  license.id = { value: "changed" };
+  license.standing = "missing";
+  assert.deepEqual(event.license, { standing: "unknown", id: "licence:source-1" });
+  assert.ok(Object.isFrozen(event.license));
+});
+
 test("marks stale and unavailable candidate feeds instead of implying fresh data", () => {
   const [unavailable, stale] = feedFixture.feeds;
   assert.deepEqual(
@@ -131,6 +205,24 @@ test("marks stale and unavailable candidate feeds instead of implying fresh data
   );
   assert.equal(assessFeedFreshness(stale).status, "stale");
   assert.match(feedFixture.fixtureStatus, /no live feed was polled/);
+  assert.throws(
+    () => assessFeedFreshness({
+      state: "available",
+      checkedAt: "2026-03-02T05:42:00Z",
+      lastSuccessfulAt: "2026-02-30T05:42:00Z",
+      maxAgeMs: 900000,
+    }),
+    /include an ISO timestamp and timezone/
+  );
+  assert.throws(
+    () => assessFeedFreshness({
+      state: "available",
+      checkedAt: "2026-03-02 05:42:00Z",
+      lastSuccessfulAt: "2026-03-02T05:42:00Z",
+      maxAgeMs: 900000,
+    }),
+    /include an ISO timestamp and timezone/
+  );
   assert.equal(
     assessFeedFreshness({
       state: "available",
