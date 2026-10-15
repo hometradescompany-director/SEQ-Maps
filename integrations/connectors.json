@@ -1,0 +1,46 @@
+{
+  "registry_version": 1,
+  "repository": "hometradescompany-director/SEQ-Maps",
+  "role": "transport-observation-authority",
+  "transport": "local-json",
+  "bindings": [
+    {
+      "module": "src/connectors/traffic-export.mjs",
+      "operation": "exportTrafficObservations",
+      "consumes": [],
+      "produces": "traffic-observations.v1",
+      "status": "offline_implemented",
+      "network_calls": false
+    }
+  ],
+  "peers": [
+    {
+      "repository": "hometradescompany-director/Traffic-Management-Swarm-Topology-",
+      "url": "https://github.com/hometradescompany-director/Traffic-Management-Swarm-Topology-",
+      "status": "offline_contract_only"
+    },
+    {
+      "repository": "hometradescompany-director/Swarm-city-hub",
+      "url": "https://github.com/hometradescompany-director/Swarm-city-hub",
+      "status": "offline_contract_only"
+    }
+  ],
+  "external_sources": [
+    {
+      "id": "qldtraffic:events:v2",
+      "module": "src/adapters/qldtraffic-events.mjs",
+      "operation": "normalizeQldTrafficEvent",
+      "status": "normalizer_implemented_live_fetch_unconfigured",
+      "credential_binding": null
+    }
+  ],
+  "controller_integration": {
+    "status": "not_configured",
+    "authority": false
+  },
+  "skills": [
+    "federation-contract-author",
+    "provenance-guardian"
+  ]
+}
+

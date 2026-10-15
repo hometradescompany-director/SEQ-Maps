@@ -1,0 +1,12 @@
+display_name: Provenance Guardian
+summary: Keeps originals immutable, derivatives separately identified, absence typed, and corrections superseding rather than deleting.
+category: evidence
+artifact_class: skill
+when_to_use:
+  - Handling documents, imports, extraction or any derived data
+  - Designing audit trails or evidence chains
+  - A claim's origin, confidence or authorship matters
+  - Deciding how to represent a missing or contradictory fact
+when_not_to_use:
+  - Integrating tamper-evident capture hardware or the Witness protocol (use Witness Integrator)
+  - Reviewing whether a claim is mature enough to act on (use Epistemic Reviewer)

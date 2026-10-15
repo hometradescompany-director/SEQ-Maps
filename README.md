@@ -1,5 +1,10 @@
 # SEQ Maps
 
+**Immediate constraint:** get a bounded useful product sold to fund development. Pricing, licensing and buyer value belong alongside engineering. Government and commercial buyers can be anywhere.
+
+**Evidence constraint:** preserve observations, decisions and provenance. Coordinated routing must account for congestion its own recommendations create; measured comparisons establish usefulness.
+
+
 Local-first mapping and traffic intelligence for Southeast Queensland.
 
 SEQ Maps turns permitted public and local transport observations into auditable traffic context. The first objective is deliberately narrow: prove one complete path from source observation to useful local map intelligence, with provenance preserved end to end.
@@ -43,3 +48,11 @@ External datasets, APIs and source material retain their own licences and terms.
 ## Engineering doctrine
 
 For the shared **POS Systems / “Welcome to the Shit Show”** engineering posture and its application in this repository, see [README.POS.md](README.POS.md).
+
+## Skills and connector bootstrap
+
+Two repo-local skills cover federation contracts and provenance. See [agent instructions](AGENTS.md), [connector registry](integrations/connectors.json) and [offline federation contract](docs/CONNECTORS.md).
+
+The local connector is implemented and tested. Live provider fetches, graph-edge reconciliation, routing algorithms and controller integrations remain separate work. Run `npm test` with Node >=22. Software licensing remains Apache-2.0; paid evaluation, support, integration and hosted services need commercial terms consistent with that licence.
+
+
