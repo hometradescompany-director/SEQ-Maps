@@ -38,6 +38,18 @@ The smoke/bushfire event contract and its source, licensing, privacy, and pilot 
 
 Bootstrap stage. Architecture and contracts come before UI.
 
+## Executable boundary
+
+The current engine is a set of Node.js modules, not a running service. It can validate observation envelopes, normalize a supplied QLDTraffic event, assess freshness and licence attribution for a live-projection decision, and calculate descriptive corridor metrics. The live-observation gate returns an eligibility result; it does not ingest, persist, or continuously evaluate observations.
+
+Run the built-in tests with `npm test` (Node.js 22 or newer). CI runs this command on pull requests and pushes to `main`. To focus on the observation boundary, run:
+
+```sh
+node --test test/live-observation-gate.test.mjs test/observation-envelope.test.mjs test/observation-freshness.test.mjs test/qldtraffic-events.test.mjs
+```
+
+These tests use synthetic fixtures and stubbed requests. There is no configured live-feed poller or end-to-end live-source-to-map pipeline; source discovery or registration alone does not grant permission to fetch or redistribute data.
+
 ## Licence
 
 Software in this repository is licensed under the Apache License 2.0 unless a file states otherwise.
